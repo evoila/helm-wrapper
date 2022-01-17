@@ -215,7 +215,7 @@ type respBody struct {
 ```
 make build
 make build-linux    // build helm-wrapper Linux binary
-make build-docker   // build docker image with helm-wrapper
+docker build -t helm-wrapper .   // build docker image with helm-wrapper
 ```
 
 #### helm-wrapper help
