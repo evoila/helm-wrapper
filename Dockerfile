@@ -1,4 +1,4 @@
-OM alpine:3 as build
+FROM alpine:3 as build
 
 RUN apk add --no-cache \
     git \
@@ -26,7 +26,7 @@ LABEL io.k8s.description="helm-wrapper" \
 RUN apk add --no-cache sudo
 
 RUN addgroup -g 1001 appuser && \
-    adduser -H -D -u 1001 -G appuser appuser && \
+    adduser -D -u 1001 -G appuser appuser && \
     mkdir -p /app/customca /app/helper && \
     touch /app/customca/dummy.crt && \
     echo "uploadPath: /tmp/charts" >/app/config.yaml && \
