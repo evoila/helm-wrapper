@@ -562,11 +562,85 @@ func listReleases(c *gin.Context) {
 	namespace := c.Param("namespace")
 	kubeContext := c.Query("kube_context")
 	var options releaseListOptions
-	err := c.ShouldBindJSON(&options)
-	if err != nil && err != io.EOF {
+	var err error
+	options.All, err = strconv.ParseBool(c.DefaultQuery("all", "false"))
+	if err != nil {
 		respErr(c, err)
 		return
 	}
+
+	options.AllNamespaces, err = strconv.ParseBool(c.DefaultQuery("all_namespaces", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.ByDate, err = strconv.ParseBool(c.DefaultQuery("by_date", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.SortReverse, err = strconv.ParseBool(c.DefaultQuery("sort_reverse", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Limit, err = strconv.Atoi(c.DefaultQuery("limit", "0"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Offset, err = strconv.Atoi(c.DefaultQuery("offset", "0"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Filter = c.Query("filter")
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Uninstalled, err = strconv.ParseBool(c.DefaultQuery("uninstalled", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Superseded, err = strconv.ParseBool(c.DefaultQuery("superseded", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Uninstalling, err = strconv.ParseBool(c.DefaultQuery("uninstalling", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Deployed, err = strconv.ParseBool(c.DefaultQuery("deployed", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Failed, err = strconv.ParseBool(c.DefaultQuery("failed", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Pending, err = strconv.ParseBool(c.DefaultQuery("pending", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
 	actionConfig, err := actionConfigInit(InitKubeInformation(namespace, kubeContext))
 	if err != nil {
 		respErr(c, err)
