@@ -14,9 +14,6 @@ FROM alpine:3
 
 ENV ADD_CA_PATH=/app/customca
 
-LABEL io.k8s.description="helm-wrapper" \
-      io.k8s.display-name="helm-wrapper"
-
 RUN apk add --no-cache sudo
 
 COPY docker/dummy.crt /app/customca/dummy.crt
