@@ -415,14 +415,30 @@ func uninstallRelease(c *gin.Context) {
 		respErr(c, err)
 		return
 	}
+
 	client := action.NewUninstall(actionConfig)
-	_, err = client.Run(name)
+
+	// run a dry run first to see if any errors pop up
+	err = uninstall(true, client, name)
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	// run the actual uninstall
+	err = uninstall(false, client, name)
 	if err != nil {
 		respErr(c, err)
 		return
 	}
 
 	respOK(c, nil)
+}
+
+func uninstall(dryRun bool, client *action.Uninstall, name string) error {
+	client.DryRun = dryRun
+	_, err := client.Run(name)
+	return err
 }
 
 func rollbackRelease(c *gin.Context) {
