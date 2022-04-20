@@ -441,14 +441,15 @@ func uninstall(dryRun bool, client *action.Uninstall, name string) error {
 	client.DryRun = dryRun
 	_, helmErr := client.Run(name)
 
-	var errMsg string
-	if dryRun {
-		errMsg = "dry run failed with: "
-	} else {
-		errMsg = "actual uninstall failed with: "
+	if helmErr != nil {
+		if dryRun {
+			return errors.New("dry run failed with: " + helmErr.Error())
+		}
+
+		return errors.New("actual uninstall failed with: " + helmErr.Error())
 	}
 
-	return errors.New(errMsg + helmErr.Error())
+	return helmErr
 }
 
 func rollbackRelease(c *gin.Context) {
