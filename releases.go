@@ -448,8 +448,7 @@ func uninstall(dryRun bool, client *action.Uninstall, name string) error {
 		errMsg = "actual uninstall failed with: "
 	}
 
-	err := errors.New(errMsg + helmErr.Error())
-	return err
+	return errors.New(errMsg + helmErr.Error())
 }
 
 func rollbackRelease(c *gin.Context) {
