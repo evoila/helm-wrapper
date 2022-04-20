@@ -419,12 +419,14 @@ func uninstallRelease(c *gin.Context) {
 	client := action.NewUninstall(actionConfig)
 
 	// run a dry run first to see if any errors pop up
+	glog.Infoln("uninstall dry run")
 	err = uninstall(true, client, name)
 	if err != nil {
 		respErr(c, err)
 		return
 	}
 
+	glog.Infoln("actual uninstall")
 	// run the actual uninstall
 	err = uninstall(false, client, name)
 	if err != nil {
@@ -437,7 +439,17 @@ func uninstallRelease(c *gin.Context) {
 
 func uninstall(dryRun bool, client *action.Uninstall, name string) error {
 	client.DryRun = dryRun
-	_, err := client.Run(name)
+	_, helmErr := client.Run(name)
+	err := errors.New(helmErr.Error())
+
+	var errMsg string
+	if dryRun {
+		errMsg = "dry run failed with: "
+	} else {
+		errMsg = "actual uninstall failed with: "
+	}
+
+	err = fmt.Errorf("%s %w", errMsg, err)
 	return err
 }
 
