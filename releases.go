@@ -440,7 +440,6 @@ func uninstallRelease(c *gin.Context) {
 func uninstall(dryRun bool, client *action.Uninstall, name string) error {
 	client.DryRun = dryRun
 	_, helmErr := client.Run(name)
-	err := errors.New(helmErr.Error())
 
 	var errMsg string
 	if dryRun {
@@ -449,7 +448,7 @@ func uninstall(dryRun bool, client *action.Uninstall, name string) error {
 		errMsg = "actual uninstall failed with: "
 	}
 
-	err = fmt.Errorf("%s %w", errMsg, err)
+	err := errors.New(errMsg + helmErr.Error())
 	return err
 }
 
