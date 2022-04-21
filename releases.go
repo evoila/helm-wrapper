@@ -419,6 +419,7 @@ func uninstallRelease(c *gin.Context) {
 	client := action.NewUninstall(actionConfig)
 
 	// run a dry run first to see if any errors pop up
+	// the dry run inside the helm client only checks if the release exists, i.e. not a "real" dry run
 	glog.Infoln("uninstall dry run")
 	err = uninstall(true, client, name)
 	if err != nil {
