@@ -415,14 +415,42 @@ func uninstallRelease(c *gin.Context) {
 		respErr(c, err)
 		return
 	}
+
 	client := action.NewUninstall(actionConfig)
-	_, err = client.Run(name)
+
+	// run a dry run first to see if any errors pop up
+	// the dry run inside the helm client only checks if the release exists, i.e. not a "real" dry run
+	glog.Infoln("uninstall dry run")
+	err = uninstall(true, client, name)
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	glog.Infoln("actual uninstall")
+	// run the actual uninstall
+	err = uninstall(false, client, name)
 	if err != nil {
 		respErr(c, err)
 		return
 	}
 
 	respOK(c, nil)
+}
+
+func uninstall(dryRun bool, client *action.Uninstall, name string) error {
+	client.DryRun = dryRun
+	_, helmErr := client.Run(name)
+
+	if helmErr != nil {
+		if dryRun {
+			return errors.New("dry run failed with: " + helmErr.Error())
+		}
+
+		return errors.New("actual uninstall failed with: " + helmErr.Error())
+	}
+
+	return helmErr
 }
 
 func rollbackRelease(c *gin.Context) {
@@ -562,11 +590,85 @@ func listReleases(c *gin.Context) {
 	namespace := c.Param("namespace")
 	kubeContext := c.Query("kube_context")
 	var options releaseListOptions
-	err := c.ShouldBindJSON(&options)
-	if err != nil && err != io.EOF {
+	var err error
+	options.All, err = strconv.ParseBool(c.DefaultQuery("all", "false"))
+	if err != nil {
 		respErr(c, err)
 		return
 	}
+
+	options.AllNamespaces, err = strconv.ParseBool(c.DefaultQuery("all_namespaces", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.ByDate, err = strconv.ParseBool(c.DefaultQuery("by_date", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.SortReverse, err = strconv.ParseBool(c.DefaultQuery("sort_reverse", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Limit, err = strconv.Atoi(c.DefaultQuery("limit", "0"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Offset, err = strconv.Atoi(c.DefaultQuery("offset", "0"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Filter = c.Query("filter")
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Uninstalled, err = strconv.ParseBool(c.DefaultQuery("uninstalled", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Superseded, err = strconv.ParseBool(c.DefaultQuery("superseded", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Uninstalling, err = strconv.ParseBool(c.DefaultQuery("uninstalling", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Deployed, err = strconv.ParseBool(c.DefaultQuery("deployed", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Failed, err = strconv.ParseBool(c.DefaultQuery("failed", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
+	options.Pending, err = strconv.ParseBool(c.DefaultQuery("pending", "false"))
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+
 	actionConfig, err := actionConfigInit(InitKubeInformation(namespace, kubeContext))
 	if err != nil {
 		respErr(c, err)

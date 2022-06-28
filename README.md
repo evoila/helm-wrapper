@@ -116,25 +116,22 @@ PUT Body (optional):
     - `GET`
     - `/api/namespaces/:namespace/releases`
 
-Body:
+| Params | Helm list equivalent | Default
+| :- | :- | :- |
+| all | `--all` | false |
+| all_namespaces | `--all-namespaces` | false |
+| by_date | `--date` | false |
+| sort_reverse | `--reverse` | false |
+| limit | `--max` | no limit |
+| offset | `--offset` | no offset |
+| filter | `--filter` | "" |
+| uninstalled | `--uninstalled` | false |
+| uninstalling | `--uninstalling` | false |
+| superseded | `--superseded` | false |
+| failed | `--failed` | false |
+| deployed | `--deployed` | false |
+| pending | `--pending` | false |
 
-``` json
-{
-    "all": false,               // `--all`
-    "all_namespaces": false,    // `--all-namespaces`
-    "by_date": false,           // `--date`
-    "sort_reverse": false,      // `--reverse`
-    "limit":  ,                 // `--max`
-    "offset": ,                 // `--offset`
-    "filter": "",               // `--filter`
-    "uninstalled": false,       // `--uninstalled`
-    "uninstalling": false,      // `--uninstalling`
-    "superseded": false,        // `--superseded`
-    "failed": false,            // `--failed`
-    "deployed": false,          // `--deployed`
-    "pending": false            // `--pending`
-}
-```
 
 + helm get
     - `GET`
@@ -215,7 +212,7 @@ type respBody struct {
 ```
 make build
 make build-linux    // build helm-wrapper Linux binary
-make build-docker   // build docker image with helm-wrapper
+docker build -t helm-wrapper .   // build docker image with helm-wrapper
 ```
 
 #### helm-wrapper help
