@@ -6,5 +6,5 @@ import (
 )
 
 func getHelmVersion(c *gin.Context) {
-	respOK(c, chartutil.DefaultCapabilities)
+	respOK(c, chartutil.DefaultCapabilities.HelmVersion)
 }
