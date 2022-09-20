@@ -190,6 +190,10 @@ PUT Body (optional):
 + list local charts
     - `GET`
     - `/api/charts/upload`
+    
++ helm version --template='version: {{.Version}} go_version: {{.GoVersion}}'
+    - `GET`
+    - `/api/version`
 
 > __Notes:__ helm-wrapper is Alpha status, no more test
 
