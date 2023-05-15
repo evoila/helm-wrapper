@@ -6,6 +6,7 @@ import (
 	"github.com/golang/glog"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/kube"
+	"helm.sh/helm/v3/pkg/registry"
 )
 
 type KubeInformation struct {
@@ -35,6 +36,14 @@ func actionConfigInit(kubeInfo *KubeInformation) (*action.Configuration, error) 
 	err := actionConfig.Init(clientConfig, kubeInfo.AimNamespace, os.Getenv("HELM_DRIVER"), glog.Infof)
 	if err != nil {
 		glog.Errorf("%+v", err)
+		return nil, err
+	}
+
+	actionConfig.RegistryClient, err = registry.NewClient(
+		registry.ClientOptDebug(settings.Debug),
+		registry.ClientOptCredentialsFile(settings.RegistryConfig),
+	)
+	if err != nil {
 		return nil, err
 	}
 
