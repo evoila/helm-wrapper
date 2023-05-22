@@ -16,5 +16,4 @@ COPY --from=build build-dir/bin/helm-wrapper helm-wrapper
 COPY config.yaml config.yaml
 
 ENV GIN_MODE=release
-CMD [ "./helm-wrapper" ]
-
+CMD [ "/helm-wrapper" ]
