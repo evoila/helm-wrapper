@@ -17,3 +17,4 @@ COPY config.yaml config.yaml
 
 ENV GIN_MODE=release
 CMD [ "./helm-wrapper" ]
+

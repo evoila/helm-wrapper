@@ -48,12 +48,12 @@ func actionConfigInit(kubeInfo *KubeInformation) (*action.Configuration, error) 
 	}
 
 	actionConfig.RegistryClient, err = registry.NewClient(
- 		registry.ClientOptDebug(settings.Debug),
- 		registry.ClientOptCredentialsFile(settings.RegistryConfig),
- 	)
- 	if err != nil {
- 		return nil, err
- 	}
+		registry.ClientOptDebug(settings.Debug),
+		registry.ClientOptCredentialsFile(settings.RegistryConfig),
+	)
+	if err != nil {
+		return nil, err
+	}
 
 	return actionConfig, nil
 }
