@@ -1,4 +1,4 @@
-FROM golang:1.17.7-alpine3.15 as build
+FROM golang:1.20-alpine3.18 as build
 
 RUN apk add --no-cache make gcc musl-dev
 
@@ -16,4 +16,4 @@ COPY --from=build build-dir/bin/helm-wrapper helm-wrapper
 COPY config.yaml config.yaml
 
 ENV GIN_MODE=release
-CMD [ "/helm-wrapper" ]
+CMD [ "./helm-wrapper" ]

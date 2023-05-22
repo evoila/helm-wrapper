@@ -6,6 +6,7 @@ import (
 	"github.com/golang/glog"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/kube"
+    "helm.sh/helm/v3/pkg/registry"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 )
 
@@ -45,6 +46,14 @@ func actionConfigInit(kubeInfo *KubeInformation) (*action.Configuration, error) 
 		glog.Errorf("%+v", err)
 		return nil, err
 	}
+
+	actionConfig.RegistryClient, err = registry.NewClient(
+ 		registry.ClientOptDebug(settings.Debug),
+ 		registry.ClientOptCredentialsFile(settings.RegistryConfig),
+ 	)
+ 	if err != nil {
+ 		return nil, err
+ 	}
 
 	return actionConfig, nil
 }
