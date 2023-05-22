@@ -190,6 +190,22 @@ PUT Body (optional):
 + list local charts
     - `GET`
     - `/api/charts/upload`
+    
++ helm version
+    - `GET`
+    - `/api/version`
+
+Response Body: 
+
+```json
+{
+"code": 0,
+    "data": {
+        "version": "v3.6",
+        "go_version": "go1.17.7"
+    }
+}
+```
 
 > __Notes:__ helm-wrapper is Alpha status, no more test
 

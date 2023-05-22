@@ -30,6 +30,12 @@ func respOK(c *gin.Context, data interface{}) {
 }
 
 func RegisterRouter(router *gin.Engine) {
+	// helm version
+	version := router.Group("/api/version")
+	{
+		version.GET("", getHelmVersion)
+	}
+
 	// helm env
 	envs := router.Group("/api/envs")
 	{
