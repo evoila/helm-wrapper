@@ -16,6 +16,8 @@ build-windows:
 
 # build docker image
 build-docker:
+	rm -rf bin/${BINARY_NAME}
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags ${LDFLAGS} -o bin/${BINARY_NAME}
 	docker build -t helm-wrapper:`git rev-parse --short HEAD` .
 
 .PHONY: golangci-lint
