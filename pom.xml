@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.evoila.kusim</groupId>
+    <artifactId>kusim-helm-wrapper</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <description>KuSIM Helm Wrapper</description>
+     <packaging>war</packaging>
+    <!--<packaging>mvn-golang</packaging>-->
+
+    <properties>
+        <mvn.golang.go.version>1.20</mvn.golang.go.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <sourceDirectory>${basedir}</sourceDirectory>
+        <directory>${basedir}/bin</directory>
+
+        <plugins>
+            <!-- https://mvnrepository.com/artifact/com.google.cloud.tools/jib-maven-plugin -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <from>
+                        <image>alpine</image>
+                    </from>
+                    <container>
+                        <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                        <appRoot>/app/helm-wrapper</appRoot>
+                        <entrypoint>./app/helm-wrapper/kusim-helm-wrapper-0.0.1-SNAPSHOT</entrypoint>
+                    </container>
+                    <extraDirectories>
+                        <paths>
+                            <path>
+                                <from>config</from>
+                                <into>/</into> 
+                            </path>
+                        </paths>
+                        <permissions>
+                            <permission>
+                                <file>/app/helm-wrapper/kusim-helm-wrapper-0.0.1-SNAPSHOT</file>
+                                <mode>755</mode>
+                            </permission>
+                        </permissions>
+                    </extraDirectories>
+                </configuration>
+            </plugin>
+
+
+
+            <plugin>
+                <groupId>com.igormaznitsa</groupId>
+                <artifactId>mvn-golang-wrapper</artifactId>
+                <version>2.3.10</version>
+                <extensions>true</extensions>
+
+                <executions>
+                    <execution>
+                        <id>clean</id>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <phase>clean</phase>
+                    </execution>
+                    <execution>
+                        <id>fix</id>
+                        <goals>
+                            <goal>fix</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                    <execution>
+                        <id>get</id>
+                        <goals>
+                            <goal>get</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                    <execution>
+                        <id>fmt</id>
+                        <goals>
+                            <goal>fmt</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>test</phase>
+                    </execution>
+                    <execution>
+                        <id>build</id>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <resultFolder>${basedir}/bin/kusim-helm-wrapper-0.0.1-SNAPSHOT</resultFolder>
+                            <targetOs>linux</targetOs>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warSourceDirectory>${basedir}/bin/kusim-helm-wrapper-0.0.1-SNAPSHOT</warSourceDirectory>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
