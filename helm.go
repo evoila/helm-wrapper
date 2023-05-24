@@ -6,7 +6,7 @@ import (
 	"github.com/golang/glog"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/kube"
-    "helm.sh/helm/v3/pkg/registry"
+	"helm.sh/helm/v3/pkg/registry"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 )
 
