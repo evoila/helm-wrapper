@@ -7,11 +7,12 @@ helm-wrapper is a helm3 HTTP wrapper with [helm Go SDK](https://helm.sh/docs/top
 ## Support API
 
 
-* If there are some APIs need to support multiple clusters,you can use the parameters below
+* If there are some APIs (`release` related) need to support multiple clusters,you can use the parameters below
 
 | Params | Description |
-| :- | :- |
+|:---| :--- |
 | kube_context | Support distinguish multiple clusters by the`kube_context`  |
+| kube_config  | Support distinguish multiple clusters by the`kube_config`  |
 
 
 
@@ -39,7 +40,7 @@ POST Body:
     "ca_file": "",              // `--ca-file`
     "cert_file": "",            // `--cert-file`
     "key_file": "",             // `--key-file`
-    "insecure_skip_verify": "", // `--insecure-skip-verify`
+    "insecure_skip_verify": false, // `--insecure-skip-verify`
     "keyring": "",              // `--keyring`
     "password": "",             // `--password`
     "repo": "",                 // `--repo`
@@ -75,6 +76,7 @@ PUT Body:
     "force": false,             // `--force`
     "install": false,           // `--install`
     "recreate": false,          // `--recreate`
+    "reuse_values": false,      // `--reuse-values`
     "cleanup_on_fail": false,   // `--cleanup-on-fail`
     "values": "",               // `--values`
     "set": [],                  // `--set`
@@ -82,7 +84,7 @@ PUT Body:
     "ca_file": "",              // `--ca-file`
     "cert_file": "",            // `--cert-file`
     "key_file": "",             // `--key-file`
-    "insecure_skip_verify": "", // `--insecure-skip-verify`
+    "insecure_skip_verify": false, // `--insecure-skip-verify`
     "keyring": "",              // `--keyring`
     "password": "",             // `--password`
     "repo": "",                 // `--repo`
@@ -138,7 +140,7 @@ PUT Body (optional):
     - `/api/namespaces/:namespace/releases/:release`
 
 | Params | Description |
-| :- | :- |
+| :--- | :--- |
 | info | support hooks/manifest/notes/values, default values |
 | output | get values output format (only info==values), support json/yaml, default json |
 
@@ -152,7 +154,7 @@ PUT Body (optional):
     - `/api/charts`
 
 | Params | Description |
-| :- | :- |
+| :--- | :--- |
 | chart  | chart name, required|
 | info   | support all/readme/values/chart, default all |
 | version | --version |
@@ -162,7 +164,7 @@ PUT Body (optional):
     - `/api/repositories/charts`
 
 | Params | Description |
-| :- | :- |
+| :--- | :--- |
 | keyword | search keyword，required |
 | version | chart version |
 | versions | if "true", all versions |
@@ -184,7 +186,7 @@ PUT Body (optional):
     - `/api/charts/upload`
 
 | Params | Description |
-| :- | :- |
+| :--- | :--- |
 | chart | upload chart file, with suffix .tgz |
 
 + list local charts
