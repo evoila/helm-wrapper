@@ -27,6 +27,7 @@ POST Body:
     "dry_run": false,           // `--dry-run`
     "disable_hooks": false,     // `--no-hooks`
     "wait": false,              // `--wait`
+    "timeout": "5m0s",          // `--timeout`
     "devel": false,             // `--false`
     "description": "",          // `--description`
     "atomic": false,            // `--atomic`
@@ -68,6 +69,7 @@ PUT Body:
     "dry_run": false,           // `--dry-run`
     "disable_hooks": false,     // `--no-hooks`
     "wait": false,              // `--wait`
+    "timeout": "5m0s",          // `--timeout`
     "devel": false,             // `--false`
     "description": "",          // `--description`
     "atomic": false,            // `--atomic`
@@ -107,6 +109,7 @@ PUT Body (optional):
     "dry_run": false,           // `--dry-run`
     "disable_hooks": false,     // `--no-hooks`
     "wait": false,              // `--wait`
+    "timeout": "5m0s",          // `--timeout`
     "force": false,             // `--force`
     "recreate": false,          // `--recreate`
     "cleanup_on_fail": false,   // `--cleanup-on-fail`
@@ -281,7 +284,7 @@ $ ./helm-wrapper --config </path/to/config.yaml> --kubeconfig </path/to/kubeconf
 replace deployment/deployment.yaml with helm-wrapper image, then:
 
 ```
-kubeclt create -f ./deployment 
+kubectl create -f ./deployment 
 ```
 
 > __Noets:__ with deployment/rbac.yaml, you not need `--kubeconfig`
