@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-    "github.com/golang/glog"
 	"github.com/gin-gonic/gin"
+	"github.com/golang/glog"
 	"github.com/pkg/errors"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart"
@@ -22,8 +22,6 @@ import (
 	helmtime "helm.sh/helm/v3/pkg/time"
 	"sigs.k8s.io/yaml"
 )
-
-var defaultTimeout = "5m0s"
 
 type releaseInfo struct {
 	Revision    int           `json:"revision"`
@@ -53,20 +51,20 @@ type releaseElement struct {
 
 type releaseOptions struct {
 	// common
-	DryRun                   bool     `json:"dry_run"`
-	DisableHooks             bool     `json:"disable_hooks"`
-	Wait                     bool     `json:"wait"`
-	Devel                    bool     `json:"devel"`
-	Description              string   `json:"description"`
-	Atomic                   bool     `json:"atomic"`
-	SkipCRDs                 bool     `json:"skip_crds"`
-	SubNotes                 bool     `json:"sub_notes"`
-	Timeout                  string   `json:"timeout"`
-	WaitForJobs              bool     `json:"wait_for_jobs"`
-	DisableOpenAPIValidation bool     `json:"disable_open_api_validation"`
-	Values                   string   `json:"values"`
-	SetValues                []string `json:"set"`
-	SetStringValues          []string `json:"set_string"`
+	DryRun                   bool          `json:"dry_run"`
+	DisableHooks             bool          `json:"disable_hooks"`
+	Wait                     bool          `json:"wait"`
+	Devel                    bool          `json:"devel"`
+	Description              string        `json:"description"`
+	Atomic                   bool          `json:"atomic"`
+	SkipCRDs                 bool          `json:"skip_crds"`
+	SubNotes                 bool          `json:"sub_notes"`
+	Timeout                  time.Duration `json:"timeout"`
+	WaitForJobs              bool          `json:"wait_for_jobs"`
+	DisableOpenAPIValidation bool          `json:"disable_open_api_validation"`
+	Values                   string        `json:"values"`
+	SetValues                []string      `json:"set"`
+	SetStringValues          []string      `json:"set_string"`
 	ChartPathOptions
 
 	// only install
@@ -353,13 +351,7 @@ func runInstall(name, namespace, kubeContext, aimChart, kubeConfig string, optio
 	client.DryRun = options.DryRun
 	client.DisableHooks = options.DisableHooks
 	client.Wait = options.Wait
-	if options.Timeout == "" {
-		options.Timeout = defaultTimeout
-	}
-	client.Timeout, err = time.ParseDuration(options.Timeout)
-	if err != nil {
-		return
-	}
+	client.Timeout = options.Timeout
 	client.WaitForJobs = options.WaitForJobs
 	client.Devel = options.Devel
 	client.Description = options.Description
@@ -513,13 +505,7 @@ func rollbackRelease(c *gin.Context) {
 	client.Force = options.Force
 	client.Recreate = options.Recreate
 	client.MaxHistory = options.MaxHistory
-	if options.Timeout == "" {
-		options.Timeout = defaultTimeout
-	}
-	client.Timeout, err = time.ParseDuration(options.Timeout)
-	if err != nil {
-		return
-	}
+	client.Timeout = options.Timeout
 
 	err = client.Run(name)
 	if err != nil {
@@ -576,13 +562,7 @@ func upgradeRelease(c *gin.Context) {
 	client.SkipCRDs = options.SkipCRDs
 	client.SubNotes = options.SubNotes
 	client.Force = options.Force
-	if options.Timeout == "" {
-		options.Timeout = defaultTimeout
-	}
-	client.Timeout, err = time.ParseDuration(options.Timeout)
-	if err != nil {
-		return
-	}
+	client.Timeout = options.Timeout
 	client.Install = options.Install
 	client.MaxHistory = options.MaxHistory
 	client.Recreate = options.Recreate
